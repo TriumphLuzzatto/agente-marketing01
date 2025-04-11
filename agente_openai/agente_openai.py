@@ -1,29 +1,26 @@
 import os
+import sys
+import asyncio
 from dotenv import load_dotenv
 from agents import Agent, Runner, ModelSettings, WebSearchTool
-import asyncio
-import sys
 
-# Desabilitando traces
+# Desabilita o tracing do OpenAI
 os.environ["OPENAI_AGENTS_DISABLE_TRACING"] = "true"
 
-# Carrega as variáveis do .env
+# Carrega as variáveis do .env (caso esteja rodando localmente)
 load_dotenv()
 
-# Pega a chave da API do .env
+# Pega a chave da API do ambiente (funciona no Streamlit também)
 api_key = os.getenv("OPENAI_API_KEY")
 
-# ⚠️ TESTE: mostra se a chave foi lida corretamente
-print("Chave da API lida do .env:", api_key)
-
 if not api_key:
-    raise ValueError("❌ OPENAI_API_KEY não encontrada nos segredos (Secrets) do Streamlit Cloud")
+    raise ValueError("❌ OPENAI_API_KEY não encontrada. Verifique seus segredos no Streamlit Cloud.")
 
-# Define a chave no ambiente para o cliente OpenAI funcionar
+# Define a chave para o OpenAI
 os.environ["OPENAI_API_KEY"] = api_key
 
+# Função principal do agente
 async def run_marketing_specialist(query: str):
-    """Executa o especialista em estratégia de Marketing"""
     agent = Agent(
         name="Marketing Strategy Specialist",
         instructions=(
@@ -50,8 +47,8 @@ async def run_marketing_specialist(query: str):
 
     return result.final_output
 
+# Se rodar como script principal
 async def main():
-    """Processa a requisição"""
     if len(sys.argv) > 1:
         query = " ".join(sys.argv[1:])
     else:

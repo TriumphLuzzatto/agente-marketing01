@@ -1,1 +1,2 @@
-.streamlit/secrets.toml
+# Ignorar segredos do Streamlit
+agente_openai/.streamlit/
